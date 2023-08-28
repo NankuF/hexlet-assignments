@@ -14,7 +14,7 @@ class App {
         char[] chars = text.toCharArray();
         char[] words = word.toCharArray();
         List<Character> list = new ArrayList<>();
-        if (text.length() < word.length()) {
+        if ( text.length() == 0 || word.length() == 0 || text.length() < word.length()) {
             return false;
         }
         for (var w: words){
@@ -27,9 +27,9 @@ class App {
 
         // var new_world = String.join(", ", list);
         var new_world = list.stream().map(Object::toString).collect(Collectors.joining(""));
-        System.out.println(new_world);
+        // System.out.println(new_world);
         if (new_world.equals(word)) {
-            System.out.println(new_world + " " + word);
+            // System.out.println(new_world + " " + word);
             return true;
         }
         return false;
