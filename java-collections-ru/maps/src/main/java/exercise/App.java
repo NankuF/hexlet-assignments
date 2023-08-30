@@ -10,7 +10,7 @@ import java.util.Arrays;
 // BEGIN
 class App {
     public static void main(String[] args) {
-        var s = getWordCount("java is the best programming language java");
+        var s = getWordCount("");
         toString(s);
     }
 
@@ -30,11 +30,10 @@ class App {
     }
 
     public static String toString(Map<String, Integer> hm) {
-        if (hm.isEmpty()) {
-            return "";
+        System.out.println(hm.containsKey(""));
+        if (hm.isEmpty() || hm.containsKey("")) {
+            return "{}";
         }
-        // Set<String> keys = hm.keySet();
-        List<String> list = new ArrayList<>();
         StringBuilder str = new StringBuilder();
         str.append("{\n");
         for (var key : hm.keySet()) {
