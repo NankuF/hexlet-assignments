@@ -2,7 +2,6 @@ package exercise;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Arrays;
 
 // BEGIN
 class App {
@@ -13,8 +12,8 @@ class App {
 
     public static Map<String, Integer> getWordCount(String text) {
         Map<String, Integer> hm = new HashMap<>();
+        if (text.length() == 0){return hm;}
         var arr_text = text.split(" ");
-        System.out.println(Arrays.toString(arr_text));
         for (String key : arr_text) {
             if (!hm.containsKey(key)) {
                 hm.put(key, 1);
@@ -27,7 +26,6 @@ class App {
     }
 
     public static String toString(Map<String, Integer> hm) {
-        System.out.println(hm.containsKey(""));
         if (hm.isEmpty() || hm.containsKey("")) {
             return "{}";
         }
