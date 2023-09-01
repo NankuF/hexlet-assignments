@@ -27,3 +27,22 @@ App.getCountOfFreeEmails(emailsList); // 3
 ## Подсказки
 
 * Для подсчета количества элементов в стриме можно воспользоваться методом `count()`
+
+
+## Solution
+```java
+class App {
+
+    private static final List<String> FREE_DOMAINS = Arrays.asList(
+        "gmail.com", "yandex.ru", "hotmail.com"
+    );
+
+    public static long getCountOfFreeEmails(List<String> emails) {
+        return emails
+            .stream()
+            .map(email -> email.split("@")[1])
+            .filter(email -> FREE_DOMAINS.contains(email))
+            .count();
+    }
+}
+```
