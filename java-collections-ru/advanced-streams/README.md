@@ -47,3 +47,21 @@ System.out.println(result); // => "MAIL=tirion@google.com,HOME=/home/tirion,var3
 
 * Примеры конфигурационных файлов можно посмотреть в директории *src/test/resources/fixtures*
 * При решении задачи вам может пригодиться метод [flatMap()](https://docs.oracle.com/en/java/javase/18/docs/api/java.base/java/util/stream/Stream.html#flatMap(java.util.function.Function))
+
+## Solution
+```java
+class App {
+    public static String getForwardedVariables(String config) {
+        String[] lines = config.split("\n");
+        return Arrays.stream(lines)
+            .filter(line -> line.startsWith("environment="))
+            .map(line -> line.replaceAll("environment=", ""))
+            .map(line -> line.replaceAll("\"", ""))
+            .map(line -> line.split(","))
+            .flatMap(Arrays::stream)
+            .filter(kv -> kv.startsWith("X_FORWARDED_"))
+            .map(kv -> kv.replaceFirst("X_FORWARDED_", ""))
+            .collect(Collectors.joining(","));
+    }
+}
+```
