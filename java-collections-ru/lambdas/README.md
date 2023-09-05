@@ -78,3 +78,31 @@ System.out.println(Arrays.deepToString(enlargedImage)); // =>
 * [Метод toArray()](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#toArray-java.util.function.IntFunction-) — возвращает массив, содержащий элементы потока
 
 * Для преобразования потока в массив строк потребуется передать в метод `toArray()` ссылку на конструктор массива: `String[][]::new`
+
+
+## Solution
+```java
+class Sorter {
+    public static List<String> takeOldestMans2(List<Map<String, String>> users) {
+        return users.stream()
+            .filter(user -> user.get("gender") == "male")
+            .sorted((user1, user2) -> {
+                LocalDate date1 = LocalDate.parse(user1.get("birthday"));
+                LocalDate date2 = LocalDate.parse(user2.get("birthday"));
+                return date1.compareTo(date2);
+            })
+            .map(user -> user.get("name"))
+            .collect(Collectors.toList());
+    }
+
+    // alternative solution
+    public static List<String> takeOldestMans(List<Map<String, String>> users) {
+        return users.stream()
+            .filter(map1 -> map1.get("gender").equals("male"))
+            .sorted(Comparator.comparingLong(map2 -> LocalDate.parse(map2.get("birthday")).toEpochDay()))
+            .map(map3 -> map3.get("name"))
+            .collect(Collectors.toList());
+    }
+
+}
+```
