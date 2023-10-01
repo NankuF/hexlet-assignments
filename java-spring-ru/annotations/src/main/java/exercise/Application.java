@@ -16,10 +16,18 @@ public class Application {
                 } catch (Exception e) {
                     // TODO: handle exception
                 }
+                String type= method.getReturnType().toString();
                 System.out.println(
-                        "Method " + method.getName() + " returns a value of type " + method.getReturnType());
+                        "Method " + method.getName() + " returns a value of type " + getHumanableType(type));
             }
         }
         // END
+    }
+
+    static String getHumanableType(String text) {
+        if (text.equals("class java.lang.String")) {
+            return "String";
+        }
+        return text;
     }
 }
