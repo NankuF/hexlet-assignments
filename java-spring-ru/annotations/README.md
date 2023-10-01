@@ -28,3 +28,39 @@
 ## Задачи
 
 * Допишите код в методе `main()`. Создайте обработчик, который будет выводить на экран информацию о методах класса `Address`, помеченных аннотацией `Inspect`. Обработчик должен печатать название метода и тип возвращаемого значения. Пример: *Method getCity returns a value of type String*
+
+
+## Solution
+Application.java
+```java
+        for (Method method : address.getClass().getDeclaredMethods()) {
+
+            if (method.isAnnotationPresent(Inspect.class)) {
+
+                System.out.println("Method "
+                    + method.getName()
+                    + " returns a value of type "
+                    + method.getReturnType().getSimpleName()
+                );
+
+                try {
+                    method.invoke(address);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+```
+Inspect.java
+```java
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface Inspect {
+}
+```
