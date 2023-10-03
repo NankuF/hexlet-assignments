@@ -18,3 +18,34 @@
 ## Задачи
 
 В конфигурационном файле приложения в свойстве `users.admins` записаны email пользователей, которые являются администраторами нашего ресурса. Добавьте в приложение обработчик, который при *GET* запросе на адрес */admins* вернет список имен пользователей, которые являются администраторами. Список должен быть отсортирован в порядке возрастания
+
+## Solution
+application.yml
+```yml
+spring:
+  output:
+    ansi:
+      enabled: always
+
+server:
+  port: 7070
+```
+
+Application.java
+```java
+    @Autowired
+    private UserProperties usersInfo;
+
+    @GetMapping("/admins")
+    public List<String> getAdmins() {
+
+        List<String> adminEmails = usersInfo.getAdmins();
+
+        return users.stream()
+            .filter(u -> adminEmails.contains(u.getEmail()))
+            .map(u -> u.getName())
+            .sorted()
+            .toList();
+
+    }
+```
