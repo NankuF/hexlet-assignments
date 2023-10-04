@@ -27,9 +27,9 @@ public class ProductsController {
         if (min!=null && max!=null)
             return productRepository.findAllByPriceBetweenOrderByPriceAsc(min, max);
         else if (min!=null)
-            return productRepository.findAllByPriceGreaterThan(min);
+            return productRepository.findAllByPriceGreaterThanOrderByPriceAsc(min);
         else if (max!=null)
-            return productRepository.findAllByPriceLessThan(max);
+            return productRepository.findAllByPriceLessThanOrderByPriceAsc(max);
         else
             return productRepository.findAll();
     }

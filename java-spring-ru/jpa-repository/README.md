@@ -39,3 +39,23 @@
 Отсортируйте товары в порядке увеличения цены
 
 Оба параметра являются необязательными. Если ни один из параметров не передан, метод должен вернуть все товары.
+
+
+## Solution
+ProductRepository.java
+```java
+    List<Product> findByPriceBetween(Integer min, Integer max, Sort sort);
+```
+
+
+ProductsController.java
+```java
+    @GetMapping(path = "")
+    public List<Product> index(
+        @RequestParam(defaultValue = Integer.MIN_VALUE + "") Integer min,
+        @RequestParam(defaultValue = Integer.MAX_VALUE + "") Integer max) {
+
+        Sort sort = Sort.by(Sort.Order.asc("price"));
+        return productRepository.findByPriceBetween(min, max, sort);
+    }
+```
