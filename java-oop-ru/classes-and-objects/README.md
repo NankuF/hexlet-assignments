@@ -37,3 +37,56 @@
   midPoint.getX(); // 5
   midPoint.getY(); // 2
   ```
+
+## Solution
+
+Point.java
+
+```java
+class Point {
+    private int x;
+    private int y;
+
+    Point(int coordinateX, int coordinateY) {
+        this.x = coordinateX;
+        this.y = coordinateY;
+    }
+
+    public int getX() {
+        return this.x;
+    }
+
+    public int getY() {
+        return this.y;
+    }
+}
+
+```
+
+Segment.java
+
+```java
+class Segment {
+    private Point beginPoint;
+    private Point endPoint;
+
+    Segment(Point point1, Point point2) {
+        this.beginPoint = point1;
+        this.endPoint = point2;
+    }
+
+    public Point getBeginPoint() {
+        return this.beginPoint;
+    }
+
+    public Point getEndPoint() {
+        return this.endPoint;
+    }
+
+    public Point getMidPoint() {
+        int newX = (beginPoint.getX() + endPoint.getX()) / 2;
+        int newY = (beginPoint.getY() + endPoint.getY()) / 2;
+        return new Point(newX, newY);
+    }
+}
+```
