@@ -80,3 +80,158 @@ text.subSequence(1, 4).toString(); // "edc"
 ```
 
 * Напишите тесты для проверки методов класса `ReversedSequence`.
+
+## Solution
+
+Home.java
+
+```java
+interface Home {
+    int compareTo(Home home);
+
+    double getArea();
+}
+```
+
+Cottage.java
+
+```java
+class Cottage implements Home {
+    private double area;
+    private int floorCount;
+
+    Cottage(double area, int floorCount) {
+        this.area = area;
+        this.floorCount = floorCount;
+    }
+
+    public double getArea() {
+        return this.area;
+    }
+
+    public String toString() {
+        return String.format("%d этажный коттедж площадью %s метров", floorCount, getArea());
+    }
+
+    public int compareTo(Home another) {
+        if (area == another.getArea()) {
+            return 0;
+        }
+
+        if (area > another.getArea()) {
+            return 1;
+        }
+
+        return -1;
+    }
+}
+```
+
+Flat.java
+
+```java
+class Flat implements Home {
+    private double area;
+    private int floor;
+    private double balconyArea;
+
+    Flat(double area, double balconyArea, int floor) {
+        this.area = area;
+        this.balconyArea = balconyArea;
+        this.floor = floor;
+    }
+
+    public double getArea() {
+        return this.area + balconyArea;
+    }
+
+    public String toString() {
+        return String.format("Квартира площадью %s метров на %d этаже", getArea(), floor);
+    }
+
+    public int compareTo(Home another) {
+        if (this.getArea() == another.getArea()) {
+            return 0;
+        }
+
+        if (this.getArea() > another.getArea()) {
+            return 1;
+        }
+
+        return -1;
+    }
+}
+```
+
+App.java
+
+```java
+class App {
+
+    // new
+    public static List<String> buildApartmentsList(List<Home> apartments, int count) {
+        return apartments.stream()
+            .sorted(Home::compareTo)
+            .limit(count)
+            .map(Home::toString)
+            .toList();
+    }
+    // old
+    public static List<String> buildApartmentsList2(List<Home> apartments, int count) {
+        int normalizedCount = Math.min(count, apartments.size());
+        apartments.sort(Home::compareTo);
+        List<Home> sublist = apartments.subList(0, normalizedCount);
+        return sublist.stream()
+            .map(appartment -> appartment.toString())
+            .collect(Collectors.toList());
+    }
+}
+```
+
+AppTest.java
+
+```java
+    @Test
+    void testReversedSequence() {
+        CharSequence text = new ReversedSequence("abcdef");
+        assertThat(text.toString()).isEqualTo("fedcba");
+
+        assertThat(text.length()).isEqualTo(6);
+
+        assertThat(text.charAt(1)).isEqualTo('e');
+        assertThat(text.charAt(4)).isEqualTo('b');
+
+        assertThat(text.subSequence(1, 4).toString()).isEqualTo("edc");
+    }
+```
+
+ReversedSequence.java
+
+```java
+class ReversedSequence implements CharSequence {
+    private String text;
+
+    ReversedSequence(String text) {
+        StringBuilder s  = new StringBuilder(text);
+        this.text = s.reverse().toString();
+    }
+
+    public int length() {
+        return text.length();
+    }
+
+    public char charAt(int index) {
+
+        return text.charAt(index);
+    }
+
+    public CharSequence subSequence(int start, int end) {
+        return text.subSequence(start, end);
+    }
+
+    public String toString() {
+        return text;
+    }
+
+}
+```
