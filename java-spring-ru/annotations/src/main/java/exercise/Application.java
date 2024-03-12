@@ -13,7 +13,7 @@ public class Application {
             if (method.isAnnotationPresent(Inspect.class)) {
 
                 System.out.println(String.format("Method %s returns a value of type %s",
-                        method.getName(), method.getReturnType()));
+                        method.getName(), method.getReturnType().getSimpleName()));
                 try {
                     method.invoke(address);
                 } catch (Exception e) {
