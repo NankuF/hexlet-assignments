@@ -42,12 +42,8 @@ public class PostsController {
 
     @DeleteMapping("/{id}")
     public void deletePostById(@PathVariable long id) {
-        var postComments =
-                commentRepository.findAll().stream().filter(c -> c.getPostId() == id).toList();
+        commentRepository.deleteByPostId(id);
         postRepository.deleteById(id);
-        for (Comment comment : postComments) {
-            commentRepository.deleteByPostId(comment.getPostId());
-        }
     }
 
     @PostMapping("")
