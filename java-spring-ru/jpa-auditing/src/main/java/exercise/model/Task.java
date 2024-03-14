@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDate;
+import java.util.Date;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -29,8 +30,8 @@ public class Task {
     private String description;
 
     @CreatedDate
-    private LocalDate createdAt;
+    private Date createdAt;
     @LastModifiedDate
-    private LocalDate updatedAt;
+    private Date updatedAt;
 }
 // END
