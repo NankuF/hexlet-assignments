@@ -1,6 +1,5 @@
 package exercise.daytime;
 
-import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
 
 
@@ -13,13 +12,9 @@ public class Day implements Daytime {
 
     // BEGIN
     @PostConstruct
-    public String hello() {
-        return String.format("It is %s now! Welcome to Spring!", getName());
-    }
-
-    @Override
-    public String toString() {
-        return hello();
+    public void init() {
+        var message = "\nBean Day is initialized!\n";
+        System.out.println(message);
     }
     // END
 }

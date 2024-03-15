@@ -5,8 +5,6 @@ import exercise.daytime.Daytime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 // BEGIN
@@ -15,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class WelcomeController {
 
     @Autowired
-    private Daytime my_bean;
+    private Daytime daytime;
 
     @GetMapping("")
-    public String getMethodName() {
-        return my_bean.toString();
+    public String welcome() {
+        return "It is " + daytime.getName() + " now! Welcome to Spring!";
     }
 
 }
