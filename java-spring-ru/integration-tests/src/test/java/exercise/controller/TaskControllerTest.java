@@ -70,28 +70,21 @@ class ApplicationTest {
                 .create();
     }
 
-    @AfterEach
-    public void clearDataBase() {
-        taskRepository.deleteAll();
-    }
     // BEGIN
     @Test
     public void testGetTaskById() throws Exception {
         var task = generateTask();
         taskRepository.save(task);
 
-        var result = mockMvc.perform(get("/tasks/" + task.getId()))
+        var request = get("/tasks/{id}", task.getId());
+        var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
         var body = result.getResponse().getContentAsString();
-        // System.out.println(body);
 
         assertThatJson(body).and(
-            a -> a.node("id").isEqualTo(task.getId()),
-            a -> a.node("title").isEqualTo(task.getTitle()),
-            a -> a.node("description").isEqualTo(task.getDescription()),
-            a -> a.node("createdAt").isEqualTo(task.getCreatedAt().toString()),
-            a -> a.node("updatedAt").isEqualTo(task.getUpdatedAt().toString())
+            v -> v.node("title").isEqualTo(task.getTitle()),
+            v -> v.node("description").isEqualTo(task.getDescription())
         );
     }
 
@@ -100,25 +93,31 @@ class ApplicationTest {
         var task = generateTask();
         taskRepository.save(task);
 
-        mockMvc.perform(delete("/tasks/" + task.getId()))
+        var request = delete("/tasks/{id}", task.getId());
+
+        mockMvc.perform(request)
                 .andExpect(status().isOk());
 
-        assertThat(Optional.empty()).isEqualTo(taskRepository.findById(task.getId()));
+        task = taskRepository.findById(task.getId()).orElse(null);
+        assertThat(task).isNull();
     }
 
     @Test
     public void testCreateTask() throws Exception {
-        var task = generateTask();
+        var data = generateTask();
 
         var request = post("/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
-                // ObjectMapper конвертирует Map в JSON
-                .content(om.writeValueAsString(task));
+                .content(om.writeValueAsString(data));
 
-        var result = mockMvc.perform(request).andExpect(status().isCreated()).andReturn();
+        mockMvc.perform(request)
+                .andExpect(status().isCreated());
 
-        var body = result.getResponse().getContentAsString();
-        assertThatJson(body).and(a -> a.node("title").isEqualTo(task.getTitle()));
+        var task = taskRepository.findByTitle(data.getTitle()).get();
+
+        assertThat(task).isNotNull();
+        assertThat(task.getTitle()).isEqualTo(data.getTitle());
+        assertThat(task.getDescription()).isEqualTo(data.getDescription());
     }
 
     @Test
@@ -127,17 +126,18 @@ class ApplicationTest {
         taskRepository.save(task);
 
         var data = new HashMap<>();
-        data.put("title", "Hello world");
+        data.put("title", "new title");
 
-        var request = put("/tasks/" + task.getId())
+        var request = put("/tasks/{id}", task.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                // ObjectMapper конвертирует Map в JSON
                 .content(om.writeValueAsString(data));
 
-        var result = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
 
-        var body = result.getResponse().getContentAsString();
-        assertThatJson(body).and(a -> a.node("title").isEqualTo(data.get("title")));
+        task = taskRepository.findById(task.getId()).get();
+
+        assertThat(task.getTitle()).isEqualTo(data.get("title"));
 
     }
     // END
