@@ -31,29 +31,9 @@ public class PostsController {
     @GetMapping("")
     public List<PostDTO> getPosts() {
         var posts = postRepository.findAll();
-        var comments = commentRepository.findAll();
+        var postsDTO = posts.stream().map(this::toPostDTO).toList();
 
-        List<PostDTO> postDTO = new ArrayList<>();
-        for (Post post : posts) {
-            var postComments =
-                    comments.stream().filter(c -> c.getPostId() == post.getId()).toList();
-            List<CommentDTO> commentsDTO = new ArrayList<>();
-            for (Comment comment : postComments) {
-                CommentDTO newCommentDTO = new CommentDTO();
-                newCommentDTO.setId(comment.getId());
-                newCommentDTO.setBody(comment.getBody());
-                commentsDTO.add(newCommentDTO);
-            }
-
-            PostDTO newPostDTO = new PostDTO();
-            newPostDTO.setId(post.getId());
-            newPostDTO.setTitle(post.getTitle());
-            newPostDTO.setBody(post.getBody());
-            newPostDTO.setComments(commentsDTO);
-
-            postDTO.add(newPostDTO);
-        }
-        return postDTO;
+        return postsDTO;
     }
 
     @GetMapping("/{id}")
@@ -61,24 +41,26 @@ public class PostsController {
         var post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
                 String.format("Post with id %s not found", id)));
 
-        var comments = commentRepository.findAllByPostId(id);
+        return toPostDTO(post);
+    }
+
+    private PostDTO toPostDTO(Post post) {
+        PostDTO dto = new PostDTO();
+        dto.setId(post.getId());
+        dto.setTitle(post.getTitle());
+        dto.setBody(post.getBody());
+        
         List<CommentDTO> commentDTOs = new ArrayList<>();
+        var comments = commentRepository.findByPostId(post.getId());
         for (Comment comment : comments) {
             CommentDTO newCommentDTO = new CommentDTO();
             newCommentDTO.setId(comment.getId());
             newCommentDTO.setBody(comment.getBody());
             commentDTOs.add(newCommentDTO);
         }
-
-        PostDTO postDTO = new PostDTO();
-        postDTO.setId(post.getId());
-        postDTO.setTitle(post.getTitle());
-        postDTO.setBody(post.getBody());
-        postDTO.setComments(commentDTOs);
-
-        return postDTO;
+        dto.setComments(commentDTOs);
+        return dto;
     }
-
 }
 
 
