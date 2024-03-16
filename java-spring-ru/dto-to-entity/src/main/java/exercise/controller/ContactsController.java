@@ -21,24 +21,32 @@ public class ContactsController {
     private ContactRepository contactRepository;
 
     // BEGIN
-    @PostMapping("")
+    @PostMapping(path = "")
     @ResponseStatus(HttpStatus.CREATED)
-    public ContactDTO postMethodName(@RequestBody ContactCreateDTO entity) {
+    public ContactDTO create(@RequestBody ContactCreateDTO contactData) {
+        var contact = toEntity(contactData);
+        contactRepository.save(contact);
+        var contactDto = toDTO(contact);
+        return contactDto;
+    }
+
+    private Contact toEntity(ContactCreateDTO contactDto) {
         var contact = new Contact();
-        contact.setFirstName(entity.getFirstName());
-        contact.setLastName(entity.getLastName());
-        contact.setPhone(entity.getPhone());
-        var contactDB = contactRepository.save(contact);
+        contact.setFirstName(contactDto.getFirstName());
+        contact.setLastName(contactDto.getLastName());
+        contact.setPhone(contactDto.getPhone());
+        return contact;
+    }
 
-        var contactDTO = new ContactDTO();
-        contactDTO.setId(contactDB.getId());
-        contactDTO.setFirstName(contactDB.getFirstName());
-        contactDTO.setLastName(contactDB.getLastName());
-        contactDTO.setPhone(contactDB.getPhone());
-        contactDTO.setCreatedAt(contactDB.getCreatedAt());
-        contactDTO.setUpdatedAt(contactDB.getUpdatedAt());
-
-        return contactDTO;
+    private ContactDTO toDTO(Contact contact) {
+        var dto = new ContactDTO();
+        dto.setId(contact.getId());
+        dto.setFirstName(contact.getFirstName());
+        dto.setLastName(contact.getLastName());
+        dto.setPhone(contact.getPhone());
+        dto.setCreatedAt(contact.getCreatedAt());
+        dto.setUpdatedAt(contact.getUpdatedAt());
+        return dto;
     }
 
     // END
