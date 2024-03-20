@@ -103,11 +103,11 @@ public class TasksController {
                 .orElseThrow(() -> new ResourceNotFoundException("Not found"));
 
         var user = task.getAssignee();
-        taskRepository.deleteById(id);
         System.out.println(String.format("NEWUSER TASK: %s", user.getTasks().size()));
-        // user.removeTask(task);
-        // System.out.println(String.format("NEWUSER TASK AFTER REMOVE: %s", user.getTasks().size()));
-        // userRepository.save(user);
+        user.removeTask(task);
+        // taskRepository.deleteById(id);  //???????????????? dont delete in user.getTasks()
+        userRepository.save(user);
+        System.out.println(String.format("NEWUSER TASK AFTER REMOVE: %s", user.getTasks().size()));
 
 
     }
