@@ -66,17 +66,34 @@ public class TasksController {
                 .orElseThrow(() -> new ResourceNotFoundException("Not found"));
         taskMapper.update(entity, task);
 
-        var oldUser = userRepository.findById(task.getAssignee().getId()).get();
+        var oldUser = userRepository.findById(task.getAssignee().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Not found"));
+        System.out.println(String.format("OLDUSER TASK: %s", oldUser.getTasks().size()));
         oldUser.removeTask(task);
-        var newUser = userRepository.findById(entity.getAssigneeId()).get();
+        System.out
+                .println(String.format("OLDUSER TASK after REMOVE: %s", oldUser.getTasks().size()));
+        var newUser = userRepository.findById(entity.getAssigneeId())
+                .orElseThrow(() -> new ResourceNotFoundException("Not found"));
+        System.out.println(String.format("NEWUSER TASK: %s", newUser.getTasks().size()));
         newUser.addTask(task);
+        System.out.println(String.format("NEWUSER TASK AFTER ADD: %s", newUser.getTasks().size()));
         userRepository.save(oldUser);
         userRepository.save(newUser);
-        
+
         var task1 = taskRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Not found"));
         var taskDTO = taskMapper.map(task1);
+        // return taskDTO;
+        // var task = taskRepository.findById(id)
+        // .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+        // var user = userRepository.findById(taskData.getAssigneeId())
+        // .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        // taskMapper.update(taskData, task);
+        // task.setAssignee(user);
+        // taskRepository.save(task);
+        // var taskDTO = taskMapper.map(task);
         return taskDTO;
+
     }
 
     @DeleteMapping("/{id}")
@@ -86,8 +103,10 @@ public class TasksController {
                 .orElseThrow(() -> new ResourceNotFoundException("Not found"));
 
         var user = task.getAssignee();
+        System.out.println(String.format("NEWUSER TASK: %s", user.getTasks().size()));
         user.removeTask(task);
+        System.out.println(String.format("NEWUSER TASK AFTER REMOVE: %s", user.getTasks().size()));
         userRepository.save(user);
-        }
-        // END
     }
+    // END
+}

@@ -18,7 +18,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.Getter;
 import lombok.Setter;
-
+import lombok.ToString;
 import java.util.ArrayList;
 import java.time.LocalDate;
 import java.util.List;
@@ -29,6 +29,7 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
+@ToString
 public class User {
 
     @Id
@@ -46,7 +47,7 @@ public class User {
     private LocalDate createdAt;
 
     // BEGIN
-    @OneToMany(mappedBy = "assignee", cascade=CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "assignee", cascade=CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks = new ArrayList<>();
 
     public void addTask(Task task) {
