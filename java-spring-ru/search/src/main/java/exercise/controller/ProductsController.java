@@ -7,6 +7,7 @@ import exercise.dto.ProductUpdateDTO;
 import exercise.mapper.ProductMapper;
 import exercise.specification.ProductSpecification;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,7 +46,6 @@ public class ProductsController {
             ProductParamsDTO params) {
         var spec = productSpecification.build(params);
         var products = productRepository.findAll(spec, PageRequest.of(page - 1, 10));
-        System.out.println(String.format("PRODUCTS: %s", products));
         var result = products.map(productMapper::map).toList();
 
         return result;
