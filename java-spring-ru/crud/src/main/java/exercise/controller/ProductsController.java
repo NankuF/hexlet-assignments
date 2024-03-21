@@ -55,9 +55,7 @@ public class ProductsController {
     public ProductDTO getProductById(@PathVariable long id) {
         var product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-        var categoryName = product.getCategory().getName();
         var productDTO = productMapper.map(product);
-        productDTO.setCategoryName(categoryName);
         return productDTO;
     }
 
@@ -65,10 +63,7 @@ public class ProductsController {
     @ResponseStatus(HttpStatus.CREATED)
     public ProductDTO createProduct(@RequestBody @Valid ProductCreateDTO productData) {
         var product = productMapper.map(productData);
-        var categoryId = product.getCategory().getId();
-        categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ConstraintViolationException("Category id not found", null));
-
+        
         productRepository.save(product);
         return productMapper.map(product);
     }
@@ -79,12 +74,8 @@ public class ProductsController {
         var product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
-        var category = categoryRepository.findById(productData.getCategoryId().get())
-                            .orElseThrow(() -> new ConstraintViolationException("Category id not found", null));
-        product.setCategory(category);
         productMapper.update(productData, product);
         productRepository.save(product);
-
         return productMapper.map(product);
     }
 
